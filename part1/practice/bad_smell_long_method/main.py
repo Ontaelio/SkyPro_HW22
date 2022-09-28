@@ -7,12 +7,33 @@
 # Конечно, вы можете попробовать разобраться как она 
 # это делает, но мы бы советовали разнести функционал 
 # по более узким функциям и написать их с нуля
-
+from operator import itemgetter
 
 csv = """Вася;39\nПетя;26\nВасилий Петрович;9"""
 
 
+def _get_data():
+    data = []
+    for line in csv.split('\n'):
+        name, age = line.split(';')
+        data.append({'name': name, 'age': int(age)})
+    return data
+
+
+def _sort_data(data):
+    return sorted(data, key=itemgetter('age'), reverse=False)
+
+
+def _filter_data(data):
+    return [x for x in data if x['age'] > 10]
+
+
 def get_users_list():
+    data = _get_data()
+    data1 = _sort_data(data)
+    return _filter_data(data1)
+
+def old_get_users_list():
     # Чтение данных из строки
     data = []
     for line in csv.split('\n'):

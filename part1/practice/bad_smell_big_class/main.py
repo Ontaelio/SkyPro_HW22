@@ -10,6 +10,41 @@
 # Ловушка не может ничего кроме как атаковать того, кто на нее наступит
 # Для решения этой задачи не используйте наследование
 
+class Warrior:
+    def attack(self):
+        pass
+
+    def defense(self):
+        pass
+
+    def move(self):
+        pass
+
+
+class Healer:
+    def defense(self):
+        pass
+
+    def move(self):
+        pass
+
+    def heal(self):
+        pass
+
+
+class Tree:
+    def defense(self):
+        pass
+
+    def on_fire(self):
+        pass
+
+
+class Trap:
+    def attack(self):
+        print("It's a trap!")
+
+
 class Obj:
     ##
     # тут представлено поведение четырех различных игровых объектов:

@@ -1,60 +1,39 @@
-# В данном коде все прокомментировано как надо,
-# но слишком избыточно.
-# Избавьтесь от комментариев, изменив имена переменных, 
-# чтобы было понятно, за что эти переменные отвечают 
-# и что происходит и без комментариев
-
 
 class Unit:
-    # ...
-    def mvmntobjbfld(self, field, feld_1_param, field_2_param, d, fl, cr, points_per_action = 1):
-        """Функция реализует перемещение юнита по полю. в качестве параметров принимает текущие координаты юнита, 
-        направление его движения, состояние не летит ли он, состояние не крадется ли он и базовый параметр скорости с 
-        которым двигается юнит
-        :param field: поле по которому перемещается юнит
-        :param feld_1_param: x-координата юнита
-        :param field_2_param: у- координата юнита
-        :param d: направление перемещения
-        :param fl: летит ли юнит
-        :param cr: крадется ли юнит
-        :param points_per_action: базовый параметр скорости
-        """
-        # Для начала проверим не установлены ли у нас два флага полета и подкрадывания в истину,
-        # т.к. одновременно эти события не должны происходить
-        if fl and cr:  # если оба параметра установлены как True
-            # выбросим ошибку
+    unit_movement = {
+        'flyer': 1.2,
+        'crawler': 0.5
+    }
+
+    move_directions = {
+        'UP': {'x': 0, 'y': -1},
+        'DOWN': {'x': 0, 'y': 1},
+        'LEFT': {'x': -1, 'y': 0},
+        'RIGHT': {'x': 1, 'y': 0},
+    }
+
+    def __init__(self, movement, x, y):
+        if movement not in self.unit_movement:
+            raise ValueError
+        self.movement_type = movement
+        self.pos_x = x
+        self.pos_y = y
+
+    def __str__(self):
+        return f"{self.movement_type} at {self.pos_x}, {self.pos_y}."
+
+    def _move(self, direction):
+        if direction not in self.move_directions:
+            raise ValueError
+        self.pos_x += self.move_directions[direction]['x'] * self.unit_movement[self.movement_type]
+        self.pos_y += self.move_directions[direction]['y'] * self.unit_movement[self.movement_type]
+
+    def move(self, field, coord_x, coord_y, direction, flyer, crawler, speed):
+        if flyer and crawler:
             raise ValueError('Рожденный ползать летать не должен!')
-        # Если ошибку мы не выбросили, значит все у нас ок и в принципе мы можем переходить к дальнейшему выполнению кода
+        self.pos_x = coord_x
+        self.pos_y = coord_y
+        self._move(direction)
+        field.set_unit(x=self.pos_x, y=self.pos_y, unit=self)
 
-        if fl:  # для начала реализуем логику для состояния когда мы летим
-            points_per_action *= 1.2 # раз мы летим то сцепления наших тапочек с землей нет, и следовательно трение меньше, и поэтому скорость выше
-            if d == 'UP':  # если направление нашего движения установлено как UP
-                new_y = field_2_param + points_per_action   # увеличим нашу координату Y на нашу текущую скорость
-                new_x = feld_1_param  # оставим нашу координату Х без изменений
-            elif d == 'DOWN':  # если направление нашего движения установлено как DOWN
-                new_y = field_2_param - points_per_action   # уменьшим нашу координату Y на нашу текущую скорость
-                new_x = feld_1_param  # оставим нашу координату Х без изменений
-            elif d == 'LEFT':  # если направление нашего движения установлено как LEFT
-                new_y = field_2_param  # оставим нашу координату Y без изменений
-                new_x = feld_1_param - points_per_action # уменьшим нашу координату Х на нашу текущую скорость
-            elif d == 'RIGHT':  # если направление нашего движения установлено как RIGHT
-                new_y = field_2_param  # оставим нашу координату Y без изменений
-                new_x = feld_1_param + points_per_action # увеличим нашу координату Х на нашу текущую скорость
-        if cr:
-            points_per_action *= 0.5
-            if d == 'UP':  # если направление нашего движения установлено как UP
-                new_y = field_2_param + points_per_action  # увеличим нашу координату Y на нашу текущую скорость
-                new_x = feld_1_param  # оставим нашу координату Х без изменений
-            elif d == 'DOWN':  # если направление нашего движения установлено как DOWN
-                new_y = field_2_param - points_per_action  # уменьшим нашу координату Y на нашу текущую скорость
-                new_x = feld_1_param  # оставим нашу координату Х без изменений
-            elif d == 'LEFT':  # если направление нашего движения установлено как LEFT
-                new_y = field_2_param  # оставим нашу координату Y без изменений
-                new_x = feld_1_param - points_per_action  # уменьшим нашу координату Х на нашу текущую скорость
-            elif d == 'RIGHT':  # если направление нашего движения установлено как RIGHT
-                new_y = field_2_param  # оставим нашу координату Y без изменений
-                new_x = feld_1_param + points_per_action  # увеличим нашу координату Х на нашу текущую скорость
 
-            field.set_unit(x=new_x, y=new_y, unit=self)
-
-#     ...
